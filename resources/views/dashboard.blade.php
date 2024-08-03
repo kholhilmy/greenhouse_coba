@@ -34,9 +34,7 @@
                             $oneBeforeLastSensor = 0;
                             $war = 0;
                         }
-                        
-                        
-
+                          
                     @endphp
                       {{ $lastSensor->suhu_data }} C
                   
@@ -163,7 +161,7 @@
                         
 
                     @endphp
-                      {{ $lastSensor->tds_data }} C
+                      {{ $lastSensor->tds_data }} ppm
                   
                   @else
                       <p>NULL DATA</p>
@@ -217,7 +215,7 @@
                         
 
                     @endphp
-                      {{ $lastSensor->kelem_data }} C
+                      {{ $lastSensor->kelem_data }} %
                   
                   @else
                       <p>NULL DATA</p>
@@ -270,7 +268,7 @@
                         
 
                     @endphp
-                      {{ $lastSensor->cahaya_data }} C
+                      {{ $lastSensor->cahaya_data }} lux
                   
                   @else
                       <p>NULL DATA</p>
@@ -323,7 +321,7 @@
                         
 
                     @endphp
-                      {{ $lastSensor->ph_data }} C
+                      {{ $lastSensor->ph_data }} 
                   
                   @else
                       <p>NULL DATA</p>
@@ -362,7 +360,7 @@
             <div class="row">
             <div class="col-8">
               <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">Tombol Lampu</p>
+                <p class="text-sm mb-0 text-capitalize font-weight-bold">Tombol Sistem</p>
               </div>
             </div>
             
