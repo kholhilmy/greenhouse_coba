@@ -116,7 +116,7 @@
                               $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
                               $lastSensor = $greenhouseSensors->last();
 
-                              $cok = 0;
+                              $cok = 100;
                               
                               if($lastSensor && $lastSensor->ketinggian_data != 0){
                                     $cak = 40;
@@ -688,6 +688,8 @@ $(document).ready(function(){
                             @php
                                 $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
                                 $lastSensor = $greenhouseSensors->last();
+
+                                $cok = 100;
 
                                 if ($greenhouseSensors->count() >= 2) {
                                   if($lastSensor && $lastSensor->ketinggian_data != 0){
