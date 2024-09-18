@@ -23,34 +23,43 @@
                 <h5 class="font-weight-bolder mb-0">
                   @if ($sensors->isNotEmpty())
                     @php
+                        // Filter sensors based on greenhouse ID
                         $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
-                        $lastSensor = $greenhouseSensors->last();
+                        $lastSensor = $greenhouseSensors->last(); // Get the last sensor data
 
-                        if ($greenhouseSensors->count() >= 2) {
-                            $oneBeforeLastSensor = $greenhouseSensors->slice(-2, 1)->first();
-                            $war = ($lastSensor->suhu_data  - $oneBeforeLastSensor->suhu_data) / $oneBeforeLastSensor->suhu_data * 100 ;
-                        } else {
-                            // Handle the case where the collection has fewer than 2 items
-                            $oneBeforeLastSensor = 0;
-                            $war = 0;
-                        }
-                          
-                    @endphp
-                      {{ $lastSensor->suhu_data }} C
-                  
-                  @else
-                      <p>NULL DATA</p>
-                  @endif
-                  <span class="text-success text-sm font-weight-bolder">
-                  @php
-                      if($war >= 0){
-                        $pos = "+";
-                      }else{
+                        // Initialize default values
+                        $war = 0;
                         $pos = "";
-                      }
-                  @endphp
-                      {{$pos}}
-                    {{number_format((float)$war, 2, '.', '')}} %
+
+                        // Check if we have at least 2 sensor readings
+                        if ($greenhouseSensors->count() >= 2) {
+                            $oneBeforeLastSensor = $greenhouseSensors->slice(-2, 1)->first(); // Get second last sensor
+
+                            // Ensure both lastSensor and oneBeforeLastSensor are not null
+                            if ($lastSensor && $oneBeforeLastSensor && $oneBeforeLastSensor->suhu_data != 0) {
+                                // Calculate percentage change
+                                $war = ($lastSensor->suhu_data - $oneBeforeLastSensor->suhu_data) / $oneBeforeLastSensor->suhu_data * 100;
+                            }
+                        }
+
+                        // Check for positive or negative change
+                        $pos = ($war >= 0) ? "+" : "";
+                    @endphp
+
+                    @if ($lastSensor)
+                      <!-- Display last sensor's temperature -->
+                      {{ $lastSensor->suhu_data }} C
+                    @else
+                      <!-- Handle case where no sensor data is available -->
+                      <p>No sensor data available</p>
+                    @endif
+
+                  @else
+                    <p>NULL DATA</p>
+                  @endif
+
+                  <span class="text-success text-sm font-weight-bolder">
+                    {{$pos}}{{ number_format((float)$war, 2, '.', '') }} %
                   </span>
                 </h5>
               </div>
