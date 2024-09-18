@@ -111,21 +111,31 @@
                         <div class="progress-percentage">
                           <span class="text-xs font-weight-bold">
                             
-                            @if ($sensors->isNotEmpty())
+                          @if ($sensors->isNotEmpty())
                             @php
                               $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
-                                $lastSensor = $greenhouseSensors->last();
-                                $cak = 40;
-                                $cik = ($cak - $lastSensor->ketinggian_data);
-                                $cok = $cik / $cak * 100;
+                              $lastSensor = $greenhouseSensors->last();
+
+                              $cok = 0;
+                              
+                              if($lastSensor && $lastSensor->ketinggian_data != 0){
+                                    $cak = 40;
+                                    $cik = ($cak - $lastSensor->ketinggian_data);
+                                    $cok = $cik / $cak * 100;
+                                  
+                              }
                                    
                             @endphp
-                            
-                            {{ $cok}} %
-                            
+
+                            @if ($lastSensor)    
+                              {{ $cok}} %
                             @else
-                                <p>NULL DATA</p>
+                              <p>No sensor data available</p>
                             @endif
+                            
+                          @else
+                            <p>NULL DATA</p>
+                          @endif
                           </span>
                         </div>
                       </div>
@@ -160,7 +170,10 @@
 
                         if ($greenhouseSensors->count() >= 2) {
                             $oneBeforeLastSensor = $greenhouseSensors->slice(-2, 1)->first();
-                            $war = ($lastSensor->tds_data  - $oneBeforeLastSensor->tds_data) / $oneBeforeLastSensor->tds_data * 100 ;
+                            if($lastSensor && $oneBeforeLastSensor && $oneBeforeLastSensor->tds_data != 0){
+                              $war = ($lastSensor->tds_data  - $oneBeforeLastSensor->tds_data) / $oneBeforeLastSensor->tds_data * 100 ;
+                            }
+                            
                         } else {
                             // Handle the case where the collection has fewer than 2 items
                             $oneBeforeLastSensor = 0;
@@ -170,12 +183,19 @@
                         
 
                     @endphp
+
+                  @if($lastSensor)
                       {{ $lastSensor->tds_data }} ppm
                   
                   @else
-                      <p>NULL DATA</p>
+
+                  <p>No sensor data available</p>
                   @endif
-                  <span class="text-success text-sm font-weight-bolder">
+
+                @else
+                  <p>NULL DATA</p>
+                @endif
+                <span class="text-success text-sm font-weight-bolder">
                   @php
                       if($war >= 0){
                         $pos = "+";
@@ -214,7 +234,9 @@
 
                         if ($greenhouseSensors->count() >= 2) {
                             $oneBeforeLastSensor = $greenhouseSensors->slice(-2, 1)->first();
-                            $war = ($lastSensor->kelem_data  - $oneBeforeLastSensor->kelem_data) / $oneBeforeLastSensor->kelem_data * 100 ;
+                            if ($lastSensor && $oneBeforeLastSensor && $oneBeforeLastSensor->kelem_data != 0) {
+                              $war = ($lastSensor->kelem_data  - $oneBeforeLastSensor->kelem_data) / $oneBeforeLastSensor->kelem_data * 100 ;
+                            }
                         } else {
                             // Handle the case where the collection has fewer than 2 items
                             $oneBeforeLastSensor = 0;
@@ -224,7 +246,13 @@
                         
 
                     @endphp
+                    @if ($lastSensor)
+                      <!-- Display last sensor's temperature -->
                       {{ $lastSensor->kelem_data }} %
+                    @else
+                      <!-- Handle case where no sensor data is available -->
+                      <p>No sensor data available</p>
+                    @endif
                   
                   @else
                       <p>NULL DATA</p>
@@ -267,7 +295,9 @@
 
                         if ($greenhouseSensors->count() >= 2) {
                             $oneBeforeLastSensor = $greenhouseSensors->slice(-2, 1)->first();
-                            $war = ($lastSensor->cahaya_data  - $oneBeforeLastSensor->cahaya_data) / $oneBeforeLastSensor->cahaya_data * 100 ;
+                            if ($lastSensor && $oneBeforeLastSensor && $oneBeforeLastSensor->cahaya_data != 0) {
+                              $war = ($lastSensor->cahaya_data  - $oneBeforeLastSensor->cahaya_data) / $oneBeforeLastSensor->cahaya_data * 100 ;
+                            }
                         } else {
                             // Handle the case where the collection has fewer than 2 items
                             $oneBeforeLastSensor = 0;
@@ -277,7 +307,13 @@
                         
 
                     @endphp
+                    @if ($lastSensor)
+                      <!-- Display last sensor's temperature -->
                       {{ $lastSensor->cahaya_data }} lux
+                    @else
+                      <!-- Handle case where no sensor data is available -->
+                      <p>No sensor data available</p>
+                    @endif
                   
                   @else
                       <p>NULL DATA</p>
@@ -320,7 +356,9 @@
 
                         if ($greenhouseSensors->count() >= 2) {
                             $oneBeforeLastSensor = $greenhouseSensors->slice(-2, 1)->first();
-                            $war = ($lastSensor->ph_data  - $oneBeforeLastSensor->ph_data) / $oneBeforeLastSensor->ph_data * 100 ;
+                            if ($lastSensor && $oneBeforeLastSensor && $oneBeforeLastSensor->ph_data != 0) {
+                              $war = ($lastSensor->ph_data  - $oneBeforeLastSensor->ph_data) / $oneBeforeLastSensor->ph_data * 100 ;
+                            }
                         } else {
                             // Handle the case where the collection has fewer than 2 items
                             $oneBeforeLastSensor = 0;
@@ -330,7 +368,13 @@
                         
 
                     @endphp
+                    @if ($lastSensor)
+                      <!-- Display last sensor's temperature -->
                       {{ $lastSensor->ph_data }} 
+                    @else
+                      <!-- Handle case where no sensor data is available -->
+                      <p>No sensor data available</p>
+                    @endif
                   
                   @else
                       <p>NULL DATA</p>
@@ -642,17 +686,30 @@ $(document).ready(function(){
                 <h4 class="font-weight-bolder">
                           @if ($sensors->isNotEmpty())
                             @php
-                                $lastSensor = $sensors->last();
-                                $cak = 100;
-                                $cik = ($cak - $lastSensor->ketinggian_data);
-                                $cok = $cik / $cak * 100;
+                                $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
+                                $lastSensor = $greenhouseSensors->last();
+
+                                if ($greenhouseSensors->count() >= 2) {
+                                  if($lastSensor && $lastSensor->ketinggian_data != 0){
+                                    $cak = 40;
+                                    $cik = ($cak - $lastSensor->ketinggian_data);
+                                    $cok = $cik / $cak * 100;
+                                  }
+                              }
+
+                                
                                    
                             @endphp
+                            @if ($lastSensor)
                             
-                            {{ $cok}} %
+                              {{ $cok}} %
                             
                             @else
-                                <p>NULL DATA</p>
+                              <p>No sensor data available</p>
+                            @endif
+                            
+                          @else
+                            <p>NULL DATA</p>
                           @endif
                 </h4>
                 <div class="progress w-75">
