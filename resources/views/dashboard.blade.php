@@ -185,7 +185,7 @@
                     @endphp
 
                   @if($lastSensor)
-                      {{ $lastSensor->tds_data }} ppm
+                      {{ number_format($lastSensor->tds_data,0 ) }} ppm
                   
                   @else
 
@@ -204,7 +204,7 @@
                       }
                   @endphp
                       {{$pos}}
-                    {{number_format((float)$war, 2, '.', '')}} %
+                    {{number_format((float)$war, 1, '.', '')}} %
                   </span>
                 </h5>
               </div>
@@ -309,7 +309,7 @@
                     @endphp
                     @if ($lastSensor)
                       <!-- Display last sensor's temperature -->
-                      {{ $lastSensor->cahaya_data }} lux
+                      {{ number_format($lastSensor->cahaya_data,0 )}} lux
                     @else
                       <!-- Handle case where no sensor data is available -->
                       <p>No sensor data available</p>
