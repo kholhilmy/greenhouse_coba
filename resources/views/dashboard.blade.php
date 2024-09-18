@@ -115,7 +115,7 @@
                             @php
                               $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
                                 $lastSensor = $greenhouseSensors->last();
-                                $cak = 100;
+                                $cak = 40;
                                 $cik = ($cak - $lastSensor->ketinggian_data);
                                 $cok = $cik / $cak * 100;
                                    
