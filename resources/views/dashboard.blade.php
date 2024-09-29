@@ -535,15 +535,22 @@ $(document).ready(function(){
                 <h4 class="font-weight-bolder">
                 @if ($sensors->isNotEmpty())
                   @php
-                      $lastSensor = $sensors->last();
-                      $oneBeforeLastSensor = $sensors;
-
+                      $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
+                      $lastSensor = $greenhouseSensors->last();
+                      
                   @endphp
-                  {{ $lastSensor->cahaya_data }} lux
                   
-                  @else
-                      <p>NULL DATA</p>
-                  @endif
+                  @if ($lastSensor)
+                      <!-- Display last sensor's temperature -->
+                      {{ number_format($lastSensor->cahaya_data,0 )}} lux
+                    @else
+                      <!-- Handle case where no sensor data is available -->
+                      <p>No sensor data available</p>
+                    @endif
+                  
+                @else
+                  <p>NULL DATA</p>
+                @endif
                 </h4>
                 <div class="progress w-75">
                   <div class="progress-bar bg-dark w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
