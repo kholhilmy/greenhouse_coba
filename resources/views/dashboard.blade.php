@@ -4,6 +4,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
   
   @foreach ($greenhouses as $greenhouse)
 
@@ -14,65 +15,67 @@
     {{$greenhouse->nama_greenhouse}}
     </h5>
     <div class="col-xl-3 col-sm-6 mb-xl-3 mb-4">
-      <div class="card">
+    <div class="card">
         <div class="card-body p-3">
-          <div class="row">
-            <div class="col-8">
-              <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">Data Suhu</p>
-                <h5 class="font-weight-bolder mb-0">
-                  @if ($sensors->isNotEmpty())
-                    @php
-                        // Filter sensors based on greenhouse ID
-                        $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
-                        $lastSensor = $greenhouseSensors->last(); // Get the last sensor data
+            <div class="row">
+                <div class="col-8">
+                    <div class="numbers">
+                        <p class="text-sm mb-0 text-capitalize font-weight-bold">Data Suhu</p>
+                        <h5 class="font-weight-bolder mb-0">
+                            @if ($sensors->isNotEmpty())
+                                @php
+                                    // Filter sensors based on greenhouse ID
+                                    $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
+                                    $lastSensor = $greenhouseSensors->last(); // Get the last sensor data
+                                    $war = 0; // Initialize temperature change percentage
+                                    $pos = ""; // Initialize positive or negative symbol
 
-                        // Initialize default values
-                        $war = 0;
-                        $pos = "";
+                                    // Check if there are at least 2 sensor readings
+                                    if ($greenhouseSensors->count() >= 2) {
+                                        $oneBeforeLastSensor = $greenhouseSensors->slice(-2, 1)->first(); // Second last sensor
 
-                        // Check if we have at least 2 sensor readings
-                        if ($greenhouseSensors->count() >= 2) {
-                            $oneBeforeLastSensor = $greenhouseSensors->slice(-2, 1)->first(); // Get second last sensor
+                                        // Ensure we have valid readings and no division by zero
+                                        if ($lastSensor && $oneBeforeLastSensor && $oneBeforeLastSensor->suhu_data != 0) {
+                                            // Calculate the percentage change
+                                            $war = ($lastSensor->suhu_data - $oneBeforeLastSensor->suhu_data) / $oneBeforeLastSensor->suhu_data * 100;
+                                        }
+                                    }
 
-                            // Ensure both lastSensor and oneBeforeLastSensor are not null
-                            if ($lastSensor && $oneBeforeLastSensor && $oneBeforeLastSensor->suhu_data != 0) {
-                                // Calculate percentage change
-                                $war = ($lastSensor->suhu_data - $oneBeforeLastSensor->suhu_data) / $oneBeforeLastSensor->suhu_data * 100;
-                            }
-                        }
+                                    // Determine if the change is positive or negative
+                                    $pos = ($war >= 0) ? "+" : "";
+                                @endphp
 
-                        // Check for positive or negative change
-                        $pos = ($war >= 0) ? "+" : "";
-                    @endphp
+                                @if ($lastSensor)
+                                    <!-- Display last sensor's temperature and percentage difference -->
+                                    <!-- <span class="temperature">{{ $lastSensor->suhu_data }} C</span> -->
+                                    <!-- <span class="temperature-diff text-{{ $war >= 0 ? 'success' : 'danger' }} text-sm font-weight-bolder">
+                                        {{ number_format($war, 4, '.', '') }} %
+                                    </span> -->
+                                    <span class="temperature"></span>
+                                    <!-- Display the temperature change percentage -->
+                                    <span class="temperature-diff text-{{ $war >= 0 ? 'success' : 'danger' }} text-sm font-weight-bolder">
+                                    </span>
+                                @else
+                                    <p>No sensor data available</p>
+                                @endif
+                            @else
+                                <p>NULL DATA</p>
+                            @endif
 
-                    @if ($lastSensor)
-                      <!-- Display last sensor's temperature -->
-                      {{ $lastSensor->suhu_data }} C
-                    @else
-                      <!-- Handle case where no sensor data is available -->
-                      <p>No sensor data available</p>
-                    @endif
-
-                  @else
-                    <p>NULL DATA</p>
-                  @endif
-
-                  <span class="text-success text-sm font-weight-bolder">
-                    {{$pos}}{{ number_format((float)$war, 2, '.', '') }} %
-                  </span>
-                </h5>
-              </div>
+                            
+                        </h5>
+                    </div>
+                </div>
+                <div class="col-4 text-end">
+                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                        <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                    </div>
+                </div>
             </div>
-            <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
+</div>
+
     <!-- <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
       <div class="card">
         <div class="card-body p-3">
@@ -96,65 +99,66 @@
       </div>
     </div> -->
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-      <div class="card">
+    <div class="card">
         <div class="card-body p-3">
-          <div class="row">
-            <div class="col-8">
-              <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">Data Penampung Air</p>
-                <h5 class="font-weight-bolder mb-0">
-                  
-                  <!-- <span class="text-success text-sm font-weight-bolder">60%</span> -->
-                </h5>
-                <div class="progress-wrapper w-185 mx-auto">
-                      <div class="progress-info">
-                        <div class="progress-percentage">
-                          <span class="text-xs font-weight-bold">
-                            
-                          @if ($sensors->isNotEmpty())
-                            @php
-                              $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
-                              $lastSensor = $greenhouseSensors->last();
-
-                              $cok = 100;
-                              
-                              if($lastSensor && $lastSensor->ketinggian_data != 0){
-                                    $cak = 40;
-                                    $cik = ($cak - $lastSensor->ketinggian_data);
-                                    $cok = $cik / $cak * 100;
-                                  
-                              }
-                                   
-                            @endphp
-
-                            @if ($lastSensor)    
-                              {{ $cok}} %
+            <div class="row">
+                <div class="col-8">
+                    <div class="numbers">
+                        <p class="text-sm mb-0 text-capitalize font-weight-bold">Data Penampung Air</p>
+                        <h5 class="font-weight-bolder mb-1">
+                            @if ($sensors->isNotEmpty())
+                                @php
+                                    $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
+                                    $lastSensor = $greenhouseSensors->last();
+                                    $cok = 100; // Default value
+                                    
+                                    if ($lastSensor && $lastSensor->ketinggian_data != 0) {
+                                        $cak = 40; // Reference height
+                                        $cik = ($cak - $lastSensor->ketinggian_data);
+                                        $cok = $cik / $cak * 100;
+                                    }
+                                @endphp
+                                @if ($lastSensor)
+                                <span class="water-level">{{ number_format($cok, 2) }}%</span>
+                                @else
+                                    <p>No sensor data available</p>
+                                @endif
                             @else
-                              <p>No sensor data available</p>
+                                <p>NULL DATA</p>
                             @endif
+                        </h5>
+                        <div class="progress-wrapper w-185 mx-auto">
+                            <div class="progress-info">
+                                <div class="progress-percentage">
+                                    <!-- <span class="water-level text-xs font-weight-bold">
+                                        @if ($sensors->isNotEmpty())
+                                            {{ number_format($cok, 2) }}%
+                                        @else
+                                            0%
+                                        @endif
+                                    </span> -->
+                                </div>
+                            </div>
                             
-                          @else
-                            <p>NULL DATA</p>
-                          @endif
-                          </span>
+                            <div class="progress">
+                              @if ($lastSensor)
+                                <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="{{ $sensors->isNotEmpty() ? $cok : 0 }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $sensors->isNotEmpty() ? $cok : 0 }}%;"></div>
+                                @else
+                                    <p></p>
+                                @endif
+                              </div>
                         </div>
-                      </div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="{{ $sensors->isNotEmpty() ? $cok : 0 }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $sensors->isNotEmpty() ? $cok : 0 }}%;"></div>
-                      </div>
                     </div>
-              </div>
-              
+                </div>
+                <div class="col-4 text-end">
+                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                        <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                    </div>
+                </div>
             </div>
-            <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
+</div>
     <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
       <div class="card">
         <div class="card-body p-3">
@@ -185,7 +189,13 @@
                     @endphp
 
                   @if($lastSensor)
-                      {{ number_format($lastSensor->tds_data,0 ) }} ppm
+                    <span class="nutrient-level">{{ number_format($lastSensor->tds_data,0 ) }} ppm</span>
+                    <span class="text-success text-sm font-weight-bolder">
+
+                    <span class="nutrient-change">
+                      {{number_format((float)$war, 1)}} %
+                      </span>
+                    </span>
                   
                   @else
 
@@ -195,17 +205,7 @@
                 @else
                   <p>NULL DATA</p>
                 @endif
-                <span class="text-success text-sm font-weight-bolder">
-                  @php
-                      if($war >= 0){
-                        $pos = "+";
-                      }else{
-                        $pos = "";
-                      }
-                  @endphp
-                      {{$pos}}
-                    {{number_format((float)$war, 1, '.', '')}} %
-                  </span>
+                
                 </h5>
               </div>
             </div>
@@ -227,6 +227,7 @@
               <div class="numbers">
                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Data Kelembapan</p>
                 <h5 class="font-weight-bolder mb-0">
+                
                 @if ($sensors->isNotEmpty())
                     @php
                         $greenhouseSensors = $sensors->where('id_greenhouse', $greenhouse->id_greenhouse);
@@ -248,7 +249,12 @@
                     @endphp
                     @if ($lastSensor)
                       <!-- Display last sensor's temperature -->
-                      {{ $lastSensor->kelem_data }} %
+                      <span class="humidity-level"> {{ $lastSensor->kelem_data }} % </span>
+                      <span class="text-success text-sm font-weight-bolder">
+                    <span class="humidity-diff">
+                    {{number_format((float)$war, 1)}} %
+                    </span>
+                  </span>
                     @else
                       <!-- Handle case where no sensor data is available -->
                       <p>No sensor data available</p>
@@ -257,17 +263,7 @@
                   @else
                       <p>NULL DATA</p>
                   @endif
-                  <span class="text-success text-sm font-weight-bolder">
-                  @php
-                      if($war >= 0){
-                        $pos = "+";
-                      }else{
-                        $pos = "";
-                      }
-                  @endphp
-                      {{$pos}}
-                    {{number_format((float)$war, 2, '.', '')}} %
-                  </span>
+                  
                 </h5>
               </div>
             </div>
@@ -309,7 +305,14 @@
                     @endphp
                     @if ($lastSensor)
                       <!-- Display last sensor's temperature -->
-                      {{ number_format($lastSensor->cahaya_data,0 )}} lux
+                      <span class="cahaya-level">
+                        {{ number_format($lastSensor->cahaya_data,0 )}} lux
+                      </span>
+                      <span class="text-success text-sm font-weight-bolder">
+                    <span class="cahaya-diff">
+                    {{number_format((float)$war, 2)}} %
+                    </span>
+                  </span>
                     @else
                       <!-- Handle case where no sensor data is available -->
                       <p>No sensor data available</p>
@@ -318,17 +321,7 @@
                   @else
                       <p>NULL DATA</p>
                   @endif
-                  <span class="text-success text-sm font-weight-bolder">
-                  @php
-                      if($war >= 0){
-                        $pos = "+";
-                      }else{
-                        $pos = "";
-                      }
-                  @endphp
-                      {{$pos}}
-                    {{number_format((float)$war, 2, '.', '')}} %
-                  </span>
+                  
                 </h5>
               </div>
             </div>
@@ -370,7 +363,14 @@
                     @endphp
                     @if ($lastSensor)
                       <!-- Display last sensor's temperature -->
+                      <span class="ph-level">
                       {{ $lastSensor->ph_data }} 
+                      </span>
+                      <span class="text-success text-sm font-weight-bolder">
+                  <span class="ph-diff">
+                    {{number_format((float)$war, 2)}} %
+                  </span>
+                  </span>
                     @else
                       <!-- Handle case where no sensor data is available -->
                       <p>No sensor data available</p>
@@ -379,17 +379,7 @@
                   @else
                       <p>NULL DATA</p>
                   @endif
-                  <span class="text-success text-sm font-weight-bolder">
-                  @php
-                      if($war >= 0){
-                        $pos = "+";
-                      }else{
-                        $pos = "";
-                      }
-                  @endphp
-                      {{$pos}}
-                    {{number_format((float)$war, 2, '.', '')}} %
-                  </span>
+
                 </h5>
               </div>
             </div>
@@ -429,6 +419,7 @@
       </div>
     </div>
   </div>
+
   <script>
 $(document).ready(function(){
     $('#mqttToggle').change(function(){
@@ -509,7 +500,7 @@ $(document).ready(function(){
               <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
             </div>
           </div>
-          <h6 class="ms-2 mt-4 mb-0"> Statistik Data Cahaya </h6>
+          <h6 class="ms-2 mt-4 mb-0"> Statistik Data PH </h6>
           <p class="text-sm ms-2"> <span class="font-weight-bolder"></span></p>
           <div class="container border-radius-lg">
             <div class="row">
@@ -542,10 +533,12 @@ $(document).ready(function(){
                   
                   @if ($lastSensor)
                       <!-- Display last sensor's temperature -->
-                      {{ number_format($lastSensor->cahaya_data,0 )}} lux
+                      <span class="ph-level">
+                      {{ number_format($lastSensor->ph_data,0 )}} 
+                      </span>
                     @else
                       <!-- Handle case where no sensor data is available -->
-                      <p>No sensor data available</p>
+                      <p>No sensor data available</p> 
                     @endif
                   
                 @else
@@ -710,8 +703,9 @@ $(document).ready(function(){
                                    
                             @endphp
                             @if ($lastSensor)
-                            
-                              {{ $cok}} %
+                            <span class="water-level">
+                              {{ $cok}} % 
+                            </span>
                             
                             @else
                               <p>No sensor data available</p>
@@ -722,7 +716,11 @@ $(document).ready(function(){
                           @endif
                 </h4>
                 <div class="progress w-75">
-                <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="{{ $sensors->isNotEmpty() ? $cok : 0 }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $sensors->isNotEmpty() ? $cok : 0 }}%;"></div>
+                @if ($lastSensor)
+                  <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="{{ $sensors->isNotEmpty() ? $cok : 0 }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $sensors->isNotEmpty() ? $cok : 0 }}%;"></div>
+                @else
+                  <p></p>
+                @endif
                 </div>
               </div>
               <!-- <div class="col-3 py-3 ps-0">
@@ -809,7 +807,7 @@ $(document).ready(function(){
       <div class="card z-index-2">
         <div class="card-header pb-0">
           <h6>Statistik Data</h6>
-          <h6>PH dan Nutrisi</h6>
+          <h6>Cahaya dan Nutrisi</h6>
           <!-- <p class="text-sm">
             <i class="fa fa-arrow-up text-success"></i>
             <span class="font-weight-bold">4% more</span> in 2021
@@ -1178,25 +1176,117 @@ $(document).ready(function(){
 @endsection
 
 @push('dashboard')
+
+<script>
+    // Function to fetch sensor data via AJAX
+    function fetchSensorData() {
+        $.ajax({
+            url: "{{ route('getSensorData') }}", // Your route to fetch sensor data
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.length > 0) {
+                    let sensorData = response[0]; // Latest sensor data
+                    let previousSensorData = response[1]; // Second latest sensor data for comparison
+                    
+                    // Update the temperature
+                    $('.temperature').text(sensorData.suhu_data + '°C');
+
+                    // Calculate the temperature difference
+                    let tempDiff = (sensorData.suhu_data - previousSensorData.suhu_data)/previousSensorData.suhu_data*100;
+                    let tempDiffClass = tempDiff >= 0 ? 'text-success' : 'text-danger'; // Determine if it's positive or negative
+                    
+                    // Update the temperature difference in percentage
+                    $('.temperature-diff').html(
+                        `<small class="${tempDiffClass} fw-semibold">
+                        <i class="bx bx-${tempDiff >= 0 ? 'up' : 'down'}-arrow-alt"></i> ${tempDiff >= 0 ? '+' : ''} ${tempDiff.toFixed(2)} %</small>`
+                    );
+
+                    // Update water level
+                    
+                    let waterLevel = (40 - sensorData.ketinggian_data) / 40 * 100;
+                    $('.water-level').text(waterLevel.toFixed(2) + '%');
+                    $('.water-level-percentage').text(waterLevel.toFixed(2) + '%');
+                    $('.progress-bar').css('width', waterLevel.toFixed(2) + '%');
+
+                    // Update nutrient data
+                    let lastNutrientSensor = sensorData.tds_data;
+                    let previousNutrientSensor = previousSensorData.tds_data;
+                    let nutrientLevel = lastNutrientSensor;
+                    let nutrientChange = (nutrientLevel - previousNutrientSensor) / previousNutrientSensor * 100;
+
+                    $('.nutrient-level').text(nutrientLevel + ' ppm');
+                    $('.nutrient-change').html(`<small class="${nutrientChange >= 0 ? 'text-success' : 'text-danger'} fw-semibold">
+                        ${nutrientChange >= 0 ? '+' : ''}${nutrientChange.toFixed(2)} %
+                        </small>`);
+
+                    // Update Kelembapan
+                    let latestHumiditySensor = sensorData.kelem_data;
+                    let previousHumiditySensor = previousSensorData.kelem_data;
+                    let humidityChange = (latestHumiditySensor - previousHumiditySensor) / previousHumiditySensor * 100;
+
+                    $('.humidity-level').text(latestHumiditySensor + ' %');
+                    $('.humidity-diff').html(`<small class="${humidityChange >= 0 ? 'text-success' : 'text-danger'} fw-semibold">
+                        ${humidityChange >= 0 ? '+' : ''}${humidityChange.toFixed(2)} %
+                        </small>`);
+
+                    // Update Cahaya
+                    let latestCahayaSensor = sensorData.cahaya_data;
+                    let previousCahayaSensor = previousSensorData.cahaya_data;
+                    let cahayaChange = (latestCahayaSensor - previousCahayaSensor) / previousCahayaSensor * 100;
+
+                    $('.cahaya-level').text(latestCahayaSensor + ' lux');
+                    $('.cahaya-diff').html(`<small class="${cahayaChange >= 0 ? 'text-success' : 'text-danger'} fw-semibold">
+                        ${cahayaChange >= 0 ? '+' : ''}${cahayaChange.toFixed(2)} %
+                    </small>`);
+
+                    // Update PH Air
+                    let latestPhSensor = sensorData.ph_data;
+                    let previousPhSensor = previousSensorData.ph_data;
+                    let phChange = (latestPhSensor - previousPhSensor) / previousPhSensor * 100;
+
+                    $('.ph-level').text(latestPhSensor);
+                    $('.ph-diff').html(`<small class="${phChange >= 0 ? 'text-success' : 'text-danger'} fw-semibold">
+                        ${phChange >= 0 ? '+' : ''}${phChange.toFixed(2)} %
+                    </small>`);
+                }
+            },
+            error: function(xhr) {
+                console.log('Error fetching sensor data:', xhr);
+            }
+        });
+    }
+
+    // Call the function to fetch data every 5 seconds
+    setInterval(fetchSensorData, 10000);
+</script>
+
+
 <script>
         $(document).ready(function() {
+          function fetchDataAndUpdateCharts() {
             $.ajax({
                 url: '/sensors-data',
                 method: 'GET',
                 success: function(data) {
                     var ctx = document.getElementById("chart-bars").getContext("2d");
-                    new Chart(ctx, {
+                    if (window.myBarChart) {
+                        window.myBarChart.destroy();
+                    }
+                    
+                    window.myBarChart = new Chart(ctx, {
                         type: "bar",
                         data: {
-                            labels:data.map(sensor => sensor.created_at),
+                            labels:data.map(sensor => {
+                            return moment(sensor.created_at).format('YYYY-MM-DD HH:mm:ss');}),
                             datasets: [{
-                                label: "Data Cahaya",
+                                label: "Data Ph",
                                 tension: 0.4,
                                 borderWidth: 0,
                                 borderRadius: 4,
                                 borderSkipped: false,
                                 backgroundColor: "#fff",
-                                data: data.map(sensor => sensor.cahaya_data),
+                                data: data.map(sensor => sensor.ph_data),
                                 maxBarThickness: 6
                             }],
                         },
@@ -1250,10 +1340,15 @@ $(document).ready(function(){
                     });
 
                     var ctx4 = document.getElementById("chart-bars2").getContext("2d");
-                    new Chart(ctx4, {
+                    if (window.myBarChart2) {
+                        window.myBarChart2.destroy();
+                    }
+                    
+                    window.myBarChart2 = new Chart(ctx4, {
                         type: "bar",
                         data: {
-                            labels: data.map(sensor => sensor.created_at),
+                            labels: data.map(sensor => {
+                            return moment(sensor.created_at).format('YYYY-MM-DD HH:mm:ss');}),
                             datasets: [{
                                 label: "Data Air",
                                 tension: 0.4,
@@ -1325,10 +1420,14 @@ $(document).ready(function(){
                     gradientStroke2.addColorStop(0.2, 'rgba(72,72,176,0.0)');
                     gradientStroke2.addColorStop(0, 'rgba(20,23,39,0)'); //purple colors
 
-                    new Chart(ctx2, {
+                    if (window.myBarChart3) {
+                        window.myBarChart3.destroy();
+                    }
+                    window.myBarChart3 = new Chart(ctx2, {
                         type: "line",
                         data: {
-                            labels: data.map(sensor => sensor.created_at),
+                            labels: data.map(sensor => {
+                            return moment(sensor.created_at).format('YYYY-MM-DD HH:mm:ss');}),
                             datasets: [{
                                 label: "Kelembapan",
                                 tension: 0.4,
@@ -1422,10 +1521,14 @@ $(document).ready(function(){
                     gradientStroke3.addColorStop(0.2, 'rgba(72,72,176,0.0)');
                     gradientStroke3.addColorStop(0, 'rgba(20,23,39,0)'); //purple colors
 
-                    new Chart(ctx3, {
+                    if (window.myBarChart4) {
+                        window.myBarChart4.destroy();
+                    }
+                    window.myBarChart4 = new Chart(ctx3, {
                         type: "line",
                         data: {
-                            labels: data.map(sensor => sensor.created_at),
+                            labels: data.map(sensor => {
+                            return moment(sensor.created_at).format('YYYY-MM-DD HH:mm:ss');}),
                             datasets: [{
                                 label: "Nutrisi",
                                 tension: 0.4,
@@ -1439,7 +1542,7 @@ $(document).ready(function(){
                                 maxBarThickness: 6
                             },
                             {
-                                label: "PH",
+                                label: "Cahaya",
                                 tension: 0.4,
                                 borderWidth: 0,
                                 pointRadius: 0,
@@ -1447,7 +1550,7 @@ $(document).ready(function(){
                                 borderWidth: 3,
                                 backgroundColor: gradientStroke2,
                                 fill: true,
-                                data: data.map(sensor => sensor.ph_data),
+                                data: data.map(sensor => sensor.cahaya_data),
                                 maxBarThickness: 6
                             }],
                         },
@@ -1509,6 +1612,9 @@ $(document).ready(function(){
                     });
                 }
             });
+          }
+          fetchDataAndUpdateCharts();
+          setInterval(fetchDataAndUpdateCharts, 15000);
         });
     </script>
 @endpush

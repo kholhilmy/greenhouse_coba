@@ -60,8 +60,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 	// List all sensors
 	Route::get('/sensors', [SensorController::class, 'index'])->name('sensors.index');
-	Route::get('/sensors-data', [SensorController::class, 'getData']);
-
+	Route::get('/sensors-data', [SensorController::class, 'getData'])->name('getSensorData');
+	
 	// Show a specific sensor by ID
 	Route::get('/sensors/{id}', [SensorController::class, 'show'])->name('sensors.show');
 

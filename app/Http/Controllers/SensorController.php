@@ -25,7 +25,7 @@ class SensorController extends Controller
     public function getData()
     {
         // $sensors = Sensor::all();
-        $sensors = Sensor::latest('created_at')->take(10)->get();
+        $sensors = Sensor::latest('id_sensor')->take(20)->get();
         return response()->json($sensors);
     }
 
