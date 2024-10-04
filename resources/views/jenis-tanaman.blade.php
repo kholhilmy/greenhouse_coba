@@ -101,8 +101,73 @@
 </div>
 <script>
 $(document).ready(function(){
+    // Menggunakan event delegation untuk tombol yang bisa ada di dalam table
+    $(document).on('click', '.mqttButton', function(){
+        const id_jenis = $(this).data('id'); // Ambil id_jenis dari tombol yang diklik
+        console.log('Button clicked');
+        console.log('ID Jenis Tanaman:', id_jenis);
+
+        // Fetch data from the database
+        $.ajax({
+            url: '/threshold-data/' + id_jenis, // Endpoint untuk mendapatkan data
+            method: 'GET',    // Gunakan GET untuk mengambil data
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Token CSRF untuk keamanan
+            },
+            success: function(data) {
+                console.log('Data retrieved for ID ' + id_jenis + ':', data); // Log struktur data
+                console.log('Type of data:', typeof data); // Cek tipe data
+
+                // Pastikan data adalah objek, bukan array
+                if (data && typeof data === 'object') {
+                    var message = {
+                        t_cahaya: data.t_cahaya.toString(),
+                        t_kelembapan: data.t_kelembapan.toString(),
+                        t_suhu: data.t_suhu.toString(),
+                        tmax_ketinggian: data.tmax_ketinggian.toString(),
+                        tmax_ph: data.tmax_ph.toString(),
+                        tmax_tds: data.tmax_tds.toString(),
+                        tmin_ketinggian: data.tmin_ketinggian.toString(),
+                        tmin_ph: data.tmin_ph.toString(),
+                        tmin_tds: data.tmin_tds.toString(),
+                    };
+                    console.log('Message to be published for ID ' + id_jenis + ':', message);
+
+                    // Publish the message
+                    $.ajax({
+                        url: '/mqtt/publish',
+                        method: 'POST',
+                        data: {
+                            topic: 'tombol/coba',
+                            message: JSON.stringify(message) // Convert message ke JSON string
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            alert('Published successfully for ID ' + id_jenis);
+                        },
+                        error: function(response) {
+                            alert('Failed to publish for ID ' + id_jenis);
+                        }
+                    });
+                } else {
+                    console.error('Data is not in expected format or is empty');
+                    alert('Data is not in expected format or is empty'); // Berikan alert jika data tidak sesuai
+                }
+            },
+            error: function() {
+                alert('Failed to retrieve data');
+            }
+        });
+    });
+});
+</script>
+
+<!-- <script>
+$(document).ready(function(){
     $('#mqttButton').click(function(){
-        var id_jenis = $(this).data('id');  // Ambil id_jenis dari tombol yang diklik
+        const id_jenis = $(this).data('id');// Ambil id_jenis dari tombol yang diklik
         console.log('Button clicked');
         console.log('ID Jenis Tanaman:', id_jenis);
 
@@ -118,27 +183,30 @@ $(document).ready(function(){
                 console.log('Type of data:', typeof data); // Check the type of data
 
                 // Verify the structure of the data
-                if (Array.isArray(data) && data.length > 0) {
-                    // console.log('First item in data:', data[0]); // Log the first item in the array
-                    // var message = data[0].id_jenis; // Change 'your_field' to the correct field
-                    var message = {
-                        t_cahaya: data.t_cahaya.toString(),
-                        t_kelembapan: data.t_kelembapan.toString(),
-                        t_suhu: data.t_suhu.toString(),
-                        tmax_ketinggian: data.tmax_ketinggian.toString(),
-                        tmax_ph: data.tmax_ph.toString(),
-                        tmax_tds: data.tmax_tds.toString(),
-                        tmin_ketinggian: data.tmin_ketinggian.toString(),
-                        tmin_ph: data.tmin_ph.toString(),
-                        tmin_tds: data.tmin_tds.toString(),
+                // if (Array.isArray(data) && data.length > 0) {
+                //     // console.log('First item in data:', data[0]); // Log the first item in the array
+                //     // var message = data[0].id_jenis; // Change 'your_field' to the correct field
+                //     var message = {
+                //         t_cahaya: data.t_cahaya.toString(),
+                //         t_kelembapan: data.t_kelembapan.toString(),
+                //         t_suhu: data.t_suhu.toString(),
+                //         tmax_ketinggian: data.tmax_ketinggian.toString(),
+                //         tmax_ph: data.tmax_ph.toString(),
+                //         tmax_tds: data.tmax_tds.toString(),
+                //         tmin_ketinggian: data.tmin_ketinggian.toString(),
+                //         tmin_ph: data.tmin_ph.toString(),
+                //         tmin_tds: data.tmin_tds.toString(),
 
-                    };
-                    console.log('Message to be published for ID ' + id_jenis + ':', message);
-                    // console.log('Message to be published:', message);
-                } else {
-                    console.error('Data is not in expected format or is empty');
-                    var message = null; // Set to null to prevent publishing
-                }
+                //     };
+                //     console.log('Message to be published for ID ' + id_jenis + ':', message);
+                //     // console.log('Message to be published:', message);
+                // } else {
+                //     console.error('Data is not in expected format or is empty');
+                //     var message = null; // Set to null to prevent publishing
+                // }
+                
+
+                console.log('Type of message:', typeof message);
                 
                 // Now publish the message
                 $.ajax({
@@ -166,5 +234,5 @@ $(document).ready(function(){
     });
 });
 
-</script>
+</script> -->
 @endsection
