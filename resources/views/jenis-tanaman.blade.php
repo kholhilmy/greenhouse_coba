@@ -120,15 +120,15 @@ $(document).ready(function(){
                     console.log('First item in data:', data[0]); // Log the first item in the array
                     // var message = data[0].id_jenis; // Change 'your_field' to the correct field
                     var message = {
-                        t_cahaya: data[0].t_cahaya,
-                        t_kelembapan: data[0].t_kelembapan,
-                        t_suhu: data[0].t_suhu,
-                        tmax_ketinggian : data[0].tmax_ketinggian,
-                        tmax_ph: data[0].tmax_ph,
-                        tmax_tds: data[0].tmax_tds,
-                        tmin_ketinggian: data[0].tmin_ketinggian,
-                        tmin_ph: data[0].tmin_ph,
-                        tmin_tds: data[0].tmin_tds,
+                        t_cahaya: data[0].t_cahaya.toString(),
+                        t_kelembapan: data[0].t_kelembapan.toString(),
+                        t_suhu: data[0].t_suhu.toString(),
+                        tmax_ketinggian : data[0].tmax_ketinggian.toString(),
+                        tmax_ph: data[0].tmax_ph.toString(),
+                        tmax_tds: data[0].tmax_tds.toString(),
+                        tmin_ketinggian: data[0].tmin_ketinggian.toString(),
+                        tmin_ph: data[0].tmin_ph.toString(),
+                        tmin_tds: data[0].tmin_tds.toString(),
 
                     };
                     
