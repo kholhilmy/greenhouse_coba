@@ -103,18 +103,37 @@ class JenisTanamanController extends Controller
         return redirect()->route('jenis-tanaman')->with('success', 'Jenis Tanaman deleted successfully.');
     }
 
-    public function getDataThres()
+    public function getDataThres($id_jenis)
     {
         \Log::info('getDataThres method called'); // Log when the method is called
-
-        // Fetch data from the database
-        $jenisTanaman = JenisTanaman::all();
-
-        if ($jenisTanaman->isEmpty()) {
-            \Log::info('No data found'); // Log if no data is found
+        // Mengambil data tanaman berdasarkan id_jenis
+        $jenisTanaman = JenisTanaman::find($id_jenis);
+        
+        if (!$jenisTanaman) {
+            return response()->json(['message' => 'Tanaman tidak ditemukan'], 404);
         }
 
-        return response()->json($jenisTanaman); // Return the data as JSON
+        // Mengembalikan data yang relevan sebagai response
+        return response()->json([
+            't_cahaya' => $jenisTanaman->t_cahaya,
+            't_kelembapan' => $jenisTanaman->t_kelembapan,
+            't_suhu' => $jenisTanaman->t_suhu,
+            'tmax_ketinggian' => $jenisTanaman->tmax_ketinggian,
+            'tmax_ph' => $jenisTanaman->tmax_ph,
+            'tmax_tds' => $jenisTanaman->tmax_tds,
+            'tmin_ketinggian' => $jenisTanaman->tmin_ketinggian,
+            'tmin_ph' => $jenisTanaman->tmin_ph,
+            'tmin_tds' => $jenisTanaman->tmin_tds,
+        ]);
+
+        // // Fetch data from the database
+        // $jenisTanaman = JenisTanaman::all();
+
+        // if ($jenisTanaman->isEmpty()) {
+        //     \Log::info('No data found'); // Log if no data is found
+        // }
+
+        // return response()->json($jenisTanaman); // Return the data as JSON
     }
 
     

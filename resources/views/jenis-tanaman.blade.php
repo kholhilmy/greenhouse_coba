@@ -82,7 +82,7 @@
                                                 <i class="cursor-pointer fas fa-trash text-secondary"></i>
                                             </button>
                                         </form>
-                                        <button type="button" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Publish Threshold"  style="border:none;background:none;" id="mqttButton">
+                                        <button type="button" class="mx-3 mqttButton" data-id="{{ $jenisTanaman->id_jenis }}" data-bs-toggle="tooltip" data-bs-original-title="Publish Threshold"  style="border:none;background:none;" id="mqttButton">
                                         <i class="cursor-pointer fas fa-upload text-secondary"></i>
 
                                         </button>
@@ -102,37 +102,39 @@
 <script>
 $(document).ready(function(){
     $('#mqttButton').click(function(){
+        var id_jenis = $(this).data('id');  // Ambil id_jenis dari tombol yang diklik
         console.log('Button clicked');
+        console.log('ID Jenis Tanaman:', id_jenis);
 
         // Fetch data from the database
         $.ajax({
-            url: '/threshold-data', // Your endpoint to get data
+            url: '/threshold-data/' + id_jenis, // Your endpoint to get data
             method: 'GET',    // Change to GET to retrieve data
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Not necessary for GET requests typically
             },
             success: function(data) {
-                console.log('Data retrieved:', data); // Log the entire data structure
+                console.log('Data retrieved for ID ' + id_jenis + ':', data);// Log the entire data structure
                 console.log('Type of data:', typeof data); // Check the type of data
 
                 // Verify the structure of the data
                 if (Array.isArray(data) && data.length > 0) {
-                    console.log('First item in data:', data[0]); // Log the first item in the array
+                    // console.log('First item in data:', data[0]); // Log the first item in the array
                     // var message = data[0].id_jenis; // Change 'your_field' to the correct field
                     var message = {
-                        t_cahaya: data[0].t_cahaya.toString(),
-                        t_kelembapan: data[0].t_kelembapan.toString(),
-                        t_suhu: data[0].t_suhu.toString(),
-                        tmax_ketinggian : data[0].tmax_ketinggian.toString(),
-                        tmax_ph: data[0].tmax_ph.toString(),
-                        tmax_tds: data[0].tmax_tds.toString(),
-                        tmin_ketinggian: data[0].tmin_ketinggian.toString(),
-                        tmin_ph: data[0].tmin_ph.toString(),
-                        tmin_tds: data[0].tmin_tds.toString(),
+                        t_cahaya: data.t_cahaya.toString(),
+                        t_kelembapan: data.t_kelembapan.toString(),
+                        t_suhu: data.t_suhu.toString(),
+                        tmax_ketinggian: data.tmax_ketinggian.toString(),
+                        tmax_ph: data.tmax_ph.toString(),
+                        tmax_tds: data.tmax_tds.toString(),
+                        tmin_ketinggian: data.tmin_ketinggian.toString(),
+                        tmin_ph: data.tmin_ph.toString(),
+                        tmin_tds: data.tmin_tds.toString(),
 
                     };
-                    
-                    console.log('Message to be published:', message);
+                    console.log('Message to be published for ID ' + id_jenis + ':', message);
+                    // console.log('Message to be published:', message);
                 } else {
                     console.error('Data is not in expected format or is empty');
                     var message = null; // Set to null to prevent publishing
@@ -150,10 +152,10 @@ $(document).ready(function(){
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        alert(response.message);
+                        alert('Published successfully for ID ' + id_jenis);
                     },
                     error: function(response) {
-                        alert('Failed to publish message');
+                        alert('Failed to publish for ID ' + id_jenis);
                     }
                 });
             },
