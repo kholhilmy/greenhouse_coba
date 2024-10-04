@@ -118,7 +118,7 @@ $(document).ready(function(){
                 // Verify the structure of the data
                 if (Array.isArray(data) && data.length > 0) {
                     console.log('First item in data:', data[0]); // Log the first item in the array
-                    var message = data[0]; // Change 'your_field' to the correct field
+                    var message = data[0].id_jenis; // Change 'your_field' to the correct field
                     console.log('Message to be published:', message);
                 } else {
                     console.error('Data is not in expected format or is empty');
