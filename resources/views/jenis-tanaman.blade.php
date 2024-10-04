@@ -131,7 +131,7 @@ $(document).ready(function(){
                         tmin_tds: data[0].tmin_tds,
 
                     };
-                    message: JSON.stringify(message)
+                    
                     console.log('Message to be published:', message);
                 } else {
                     console.error('Data is not in expected format or is empty');
@@ -144,7 +144,7 @@ $(document).ready(function(){
                     method: 'POST',
                     data: {
                         topic: 'tombol/coba',
-                        message: message
+                        message: JSON.stringify(message)
                     },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
