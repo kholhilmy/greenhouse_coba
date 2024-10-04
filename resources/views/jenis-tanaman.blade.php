@@ -131,6 +131,7 @@ $(document).ready(function(){
                         tmin_tds: data[0].tmin_tds,
 
                     };
+                    message: JSON.stringify(message)
                     console.log('Message to be published:', message);
                 } else {
                     console.error('Data is not in expected format or is empty');
