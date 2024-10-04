@@ -5,6 +5,8 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/min/moment.min.js"></script>
+  <script src="https://kit.fontawesome.com/4a0d48aa7a.js" crossorigin="anonymous"></script>
+  
   
   @foreach ($greenhouses as $greenhouse)
 
@@ -68,7 +70,8 @@
                 </div>
                 <div class="col-4 text-end">
                     <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                        <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                        <i class="fa-duotone fa-solid fa-temperature-high fa-lg opacity-10" aria-hidden="true"></i>
+                        
                     </div>
                 </div>
             </div>
@@ -152,7 +155,7 @@
                 </div>
                 <div class="col-4 text-end">
                     <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                        <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                        <i class="fa-solid fa-faucet-drip fa-lg text-lg opacity-10" aria-hidden="true"></i>
                     </div>
                 </div>
             </div>
@@ -212,7 +215,8 @@
             
             <div class="col-4 text-end">
               <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                <!-- <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i> -->
+                <i class="fa-brands fa-nutritionix fa-lg text-lg opacity-10" aria-hidden="true"></i>
               </div>
             </div>
           </div>
@@ -269,7 +273,8 @@
             </div>
             <div class="col-4 text-end">
               <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                <!-- <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i> -->
+                <i class="fa-solid fa-spray-can-sparkles fa-lg text-lg opacity-10"></i>
               </div>
             </div>
           </div>
@@ -327,7 +332,8 @@
             </div>
             <div class="col-4 text-end">
               <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                <!-- <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i> -->
+                <i class="fa-regular fa-sun fa-lg text-lg opacity-10" aria-hidden="true "></i>
               </div>
             </div>
           </div>
@@ -385,7 +391,8 @@
             </div>
             <div class="col-4 text-end">
               <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                <!-- <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i> -->
+                <i class="fa-solid fa-droplet fa-lg text-lg opacity-10" aria-hidden="true" ></i>
               </div>
             </div>
           </div>
@@ -394,7 +401,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <!-- <div class="row">
     <div class="row mt-5">
         <div class="col-xl-3 col-sm-6 mb-xl-3 mb-4">
           <div class="card">
@@ -424,7 +431,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <script>
 $(document).ready(function(){

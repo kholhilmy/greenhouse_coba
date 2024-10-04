@@ -26,15 +26,6 @@
                         
                     
                     </div>
-                    <div class="d-flex flex-row justify-content-between">
-                    
-                    <button type="button" class="btn btn-primary" id="mqttButton1">
-                    Publish Threshold
-                    </button>
-                    
-                    
-                    </div>
-                    
 
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
