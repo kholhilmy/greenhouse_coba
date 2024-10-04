@@ -413,6 +413,12 @@
                       <input class="form-check-input" type="checkbox" id="mqttToggle" checked="">
                       <label class="form-check-label" for="rememberMe">OFF / ON</label>
               </div>
+              <!-- <div class="numbers">
+                    <p class="text-sm mb-2 text-capitalize font-weight-bold">Publish Threshold</p>
+                    <button type="button" class="btn btn-primary" id="mqttButton">
+                        Publish
+                    </button>
+                </div> -->
             </div>
           </div>
         </div>

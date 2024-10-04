@@ -56,6 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::post('/jenis_tanaman', [JenisTanamanController::class, 'store'])->name('jenis_tanaman.store');
 	Route::put('/jenis_tanaman/{id_jenis}', [JenisTanamanController::class, 'update'])->name('jenis_tanaman.update');
 	Route::delete('/jenis_tanaman/{id_jenis}', [JenisTanamanController::class, 'destroy'])->name('jenis_tanaman.destroy');
+	Route::get('/threshold-data', [JenisTanamanController::class, 'getDataThres']);
 	
 
 	// List all sensors

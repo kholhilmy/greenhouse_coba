@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JenisTanaman;
 use App\Models\Greenhouse;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class JenisTanamanController extends Controller
 {
@@ -101,4 +102,38 @@ class JenisTanamanController extends Controller
 
         return redirect()->route('jenis-tanaman')->with('success', 'Jenis Tanaman deleted successfully.');
     }
+
+    public function getDataThres()
+    {
+        \Log::info('getDataThres method called'); // Log when the method is called
+
+        // Fetch data from the database
+        $jenisTanaman = JenisTanaman::all();
+
+        if ($jenisTanaman->isEmpty()) {
+            \Log::info('No data found'); // Log if no data is found
+        }
+
+        return response()->json($jenisTanaman); // Return the data as JSON
+    }
+
+    
+
+    // public function getDataThres()
+    // {
+    //     \Log::info('getData method called'); // Check if the method is reached
+    //     \Log::info('Fetched data:', $jenisTanaman->toArray());
+
+    //     try {
+    //         $jenisTanaman = JenisTanaman::all(); // Fetch data from the database
+    //         return response()->json($jenisTanaman);
+    //     } catch (\Exception $e) {
+    //         \Log::error('Error fetching data: ' . $e->getMessage()); // Log any exceptions
+    //         return response()->json(['error' => 'Failed to retrieve data'], 500);
+    //     }
+    // }
+
+    
+
+
 }
