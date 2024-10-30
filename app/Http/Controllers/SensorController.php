@@ -25,8 +25,37 @@ class SensorController extends Controller
     public function getData()
     {
         // $sensors = Sensor::all();
-        $sensors = Sensor::latest('id_sensor')->take(20)->get();
+        // $sensors = Sensor::latest('id_sensor')->take(20)->get();
+        // $greenhouses = Greenhouse::all();
+        // $sensors = Sensor::whereIn('id_greenhouse', $greenhouses->pluck('id_greenhouse'))
+        //          ->latest('id_sensor')
+        //          ->take(20)
+        //          ->get();
+        // return response()->json($sensors);
+        $sensors = Sensor::select('id_greenhouse', 'suhu_data', 'ketinggian_data', 'tds_data', 'kelem_data', 'cahaya_data', 'ph_data')
+                ->orderBy('id_sensor', 'desc')
+                ->take(20)
+                ->get()
+                ->unique('id_greenhouse')
+                ->values(); // Reset array keys
+
         return response()->json($sensors);
+        
+
+
+    }
+
+    public function getData2()
+    {
+        $sensors = Sensor::orderBy('id_sensor', 'desc')
+                ->take(20)
+                ->get()
+                ->groupBy('id_greenhouse'); 
+
+        return response()->json($sensors);
+        
+
+
     }
 
     public function show($id)
