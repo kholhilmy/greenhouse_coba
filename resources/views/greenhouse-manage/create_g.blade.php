@@ -83,6 +83,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tong" class="form-control-label">{{ __('Tinggi Penampung Air') }}</label>
+                                <div class="@error('tong') border border-danger rounded-3 @enderror">
+                                    <input class="form-control" value="{{ old('tong') }}" type="text" id="tong" name="tong">
+                                        @error('tong')
+                                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                        @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- <div class="form-group">
                         <label for="about">{{ 'About Me' }}</label>

@@ -33,6 +33,7 @@ class GreenhouseController extends Controller
             'id' => 'required|string|max:255',  // Validates that 'id' exists in 'users' table
             'waktu_tanam' => 'required|date',
             'nama_jenis' => 'required|exists:jenis_tanamans,id_jenis',  // Foreign key validation
+            'tong' => 'required|string|max:255', 
         ]);
     
         Greenhouse::create([
@@ -40,6 +41,8 @@ class GreenhouseController extends Controller
             'id' => $attributes['id'],
             'waktu_tanam' => $attributes['waktu_tanam'],
             'id_jenis' => $attributes['nama_jenis'],
+            'tong' => $attributes['tong'],
+            
         ]);
     
         return redirect()->route('greenhouse-manage')->with('success', 'Greenhouse created successfully.');
@@ -69,6 +72,7 @@ class GreenhouseController extends Controller
             'id' => 'required|string|max:255',  // Validates that 'id' exists in 'users' table
             'waktu_tanam' => 'required|date',
             'id_jenis' => 'required|exists:jenis_tanamans,id_jenis',
+            'tong' => 'required|string|max:255',  
         ]);
 
         $greenhouses = Greenhouse::findOrFail($id_greenhouse);
