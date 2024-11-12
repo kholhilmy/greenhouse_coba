@@ -1019,16 +1019,36 @@ $(document).ready(function(){
             success: function(response) {
                 console.log(response); // Debug: check the structure of the response
 
+                let greenhouseTongData = {};
+
+                response.greenhouse.forEach(function(greenhouse) {
+                    let greenhouseId = greenhouse.id_greenhouse;
+                    greenhouseTongData[greenhouse.id_greenhouse] = greenhouse.tong;
+
+                    // Now you can update the DOM or perform other actions with the greenhouse data
+                    // console.log(greenhouse.tong); // Example: Display greenhouse name
+                    
+
+                    // Example of updating some DOM element with greenhouse name
+                    $(`#greenhouse-${greenhouseId} .tong`).text(greenhouse.tong);
+                });
+
+                let idGreenhouse = 4; // Contoh id_greenhouse yang ingin diambil
+                let tong = greenhouseTongData[idGreenhouse];
+
+                console.log("Tong untuk greenhouse dengan id " + idGreenhouse + ": " + tong);
                 // Loop through each greenhouse's sensor data
-                response.forEach(function(sensorData) {
+                response.sensors.forEach(function(sensorData) {
                     let greenhouseId = sensorData.id_greenhouse;
+                    
 
                     // Update temperature
                     $(`#greenhouse-${greenhouseId} .temperature`).text(sensorData.suhu_data + '°C');
 
                     // Update water level
                     if (sensorData.ketinggian_data !== null) {
-                        let waterLevel = (40 - sensorData.ketinggian_data) / 40 * 100;
+                        let datatong = greenhouseTongData[greenhouseId];
+                        let waterLevel = (datatong - sensorData.ketinggian_data) / datatong * 100;
                         $(`#greenhouse-${greenhouseId} .water-level`).text(waterLevel.toFixed(2) + '%');
                     }
 

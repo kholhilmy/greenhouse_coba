@@ -30,6 +30,7 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Greenhouse</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Tanaman</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Tanam</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tinggi Penampung Air (cm) </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Creation Date</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
                                 </tr>
@@ -44,6 +45,7 @@
                                             <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $greenhouse->nama_greenhouse }}</p></td>
                                             <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $greenhouse->JenisTanaman->nama_jenis }}</p></td>
                                             <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $greenhouse->waktu_tanam }}</p></td>
+                                            <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $greenhouse->tong }}</p></td>
                                             <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $greenhouse->created_at }}</p></td>
                                             <td class="text-center">
                                                 <a href="{{ route('greenhouses.edit', $greenhouse->id_greenhouse) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit">

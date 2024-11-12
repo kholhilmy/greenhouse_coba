@@ -32,6 +32,7 @@ class SensorController extends Controller
         //          ->take(20)
         //          ->get();
         // return response()->json($sensors);
+        $greenhouses = Greenhouse::all();
         $sensors = Sensor::select('id_greenhouse', 'suhu_data', 'ketinggian_data', 'tds_data', 'kelem_data', 'cahaya_data', 'ph_data')
                 ->orderBy('id_sensor', 'desc')
                 ->take(20)
@@ -39,7 +40,10 @@ class SensorController extends Controller
                 ->unique('id_greenhouse')
                 ->values(); // Reset array keys
 
-        return response()->json($sensors);
+                return response()->json([
+                    'sensors' => $sensors,
+                    'greenhouse' => $greenhouses
+                ]);
         
 
 

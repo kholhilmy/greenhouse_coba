@@ -14,6 +14,7 @@ class Greenhouse extends Model
         'id',
         'waktu_tanam',
         'id_jenis',
+        'tong',
     ];
 
     // Relationships

@@ -42,6 +42,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="id" class="form-control-label">{{ __('ID User') }}</label>
@@ -81,6 +82,17 @@
                                 <label for="waktu_tanam" class="form-control-label">{{ __('Waktu Tanam') }}</label>
                                 <div class="@error('waktu_tanam') border border-danger rounded-3 @enderror">
                                     <input class="form-control" type="date" placeholder="" id="waktu_tanam" name="waktu_tanam" value="{{ old('waktu_tanam', $greenhouses->waktu_tanam) }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tong" class="form-control-label">{{ __('Tinggi Penampung Air') }}</label>
+                                <div class="@error('tong')border border-danger rounded-3 @enderror">
+                                    <input class="form-control" value="{{ old('tong', $greenhouses->tong) }}" type="text" id="tong" name="tong">
+                                        @error('tong')
+                                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                        @enderror
                                 </div>
                             </div>
                         </div>
