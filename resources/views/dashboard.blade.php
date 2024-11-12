@@ -1097,7 +1097,9 @@ $(document).ready(function(){
                         let greenhouseData = data[greenhouseId];
 
                         // Prepare data for charts
-                        let labels = greenhouseData.map(sensor => moment(sensor.created_at).format('YYYY-MM-DD HH:mm:ss'));
+                        // let labels = greenhouseData.map(sensor => moment(sensor.created_at).format('YYYY-MM-DD HH:mm:ss'));
+                        let labels = ['Now', '10 seconds ago', '20 seconds ago', '30 seconds ago', '40 seconds ago', '50 seconds ago', '60 seconds ago', '70 seconds ago', '80 seconds ago', '90 seconds ago', '100 seconds ago', '110 seconds ago', '120 seconds ago', '130 seconds ago', '140 seconds ago', '150 seconds ago', '160 seconds ago', '170 seconds ago', '180 seconds ago', '190 seconds ago', '200 seconds ago']
+
                         let phData = greenhouseData.map(sensor => sensor.ph_data);
                         let temperatureData = greenhouseData.map(sensor => sensor.suhu_data);
                         let humidityData = greenhouseData.map(sensor => sensor.kelem_data);

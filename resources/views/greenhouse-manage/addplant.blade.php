@@ -187,6 +187,61 @@
             </div>
         </div>
     </div>
+    <div>
+    <div class="alert alert-secondary mx-4" role="alert">
+        <span class="text-white">
+            <strong>REFERENSI DATA THERSHOLD</strong>
+        </span>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4 mx-4">
+                
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Tanaman</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Threshold Ketinggian </th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Threshold Suhu</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Threshold Kelembapan</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Threshold Cahaya</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Threshold Ph</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Threshold TDS</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Masa Tanam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($referensi as $referensi)
+
+
+                            
+                                <tr>
+                                    
+                                    <td class="ps-4"><p class="text-xs font-weight-bold mb-0">{{ $referensi->nama_jenis_ref }}</p></td>
+                                    <td class="text-center"><p class="text-xs font-weight-bold mb-0">Max : {{ $referensi->tmax_ketinggian_ref }} Min : {{ $referensi->tmin_ketinggian_ref }}</p></td>
+                                    <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $referensi->t_suhu_ref }}</p></td>
+                                    <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $referensi->t_kelembapan_ref }}</p></td>
+                                    <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $referensi->t_cahaya_ref }}</p></td>
+                                    <td class="text-center"><p class="text-xs font-weight-bold mb-0">Max : {{ $referensi->tmax_ph_ref }} Min : {{ $referensi->tmin_ph_ref }}</p></td>
+                                    <td class="text-center"><p class="text-xs font-weight-bold mb-0">Max : {{ $referensi->tmax_tds_ref }} Min : {{ $referensi->tmin_tds_ref }}</p></td>
+                                    <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $referensi->masa_tanam }}</p></td>
+                                    
+                                </tr>
+
+                        @endforeach
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 

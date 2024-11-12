@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JenisTanaman;
 use App\Models\Greenhouse;
+use App\Models\ReferensiJenisTanaman;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -23,8 +24,9 @@ class JenisTanamanController extends Controller
     {
         // Fetch all greenhouses to populate a select dropdown
         $greenhouses = Greenhouse::all();
+        $referensi = ReferensiJenisTanaman::all();
 
-        return view('greenhouse-manage.addplant', compact('greenhouses'));
+        return view('greenhouse-manage.addplant', compact('greenhouses','referensi'));
     }
 
     // Store a newly created jenis tanaman in the database
@@ -65,8 +67,9 @@ class JenisTanamanController extends Controller
     {
         $jenisTanaman = JenisTanaman::findOrFail($id_jenis);
         $greenhouses = Greenhouse::all();
+        $referensi = ReferensiJenisTanaman::all();
 
-        return view('greenhouse-manage.editplant', compact('jenisTanaman', 'greenhouses'));
+        return view('greenhouse-manage.editplant', compact('jenisTanaman', 'greenhouses','referensi'));
     }
 
     // Update the specified jenis tanaman in the database
