@@ -1,7 +1,7 @@
-
 @extends('layouts.user_type.auth')
 
 @section('content')
+
 <div>
     <div class="alert alert-secondary mx-4" role="alert">
         <span class="text-white">
@@ -37,7 +37,6 @@
                             </thead>
                             <tbody>
                                 @foreach ($greenhouses as $greenhouse)
-                                
                                     @if(auth()->user()->id == $greenhouse->user->id)
                                         <tr>
                                             <td class="ps-4"><p class="text-xs font-weight-bold mb-0">{{ $greenhouse->id_greenhouse }}</p></td>
@@ -48,6 +47,7 @@
                                             <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $greenhouse->tong }}</p></td>
                                             <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $greenhouse->created_at }}</p></td>
                                             <td class="text-center">
+                                                <!-- Edit Button to trigger Modal for Greenhouse -->
                                                 <a href="{{ route('greenhouses.edit', $greenhouse->id_greenhouse) }}" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit">
                                                     <i class="fas fa-user-edit text-secondary"></i>
                                                 </a>
@@ -58,10 +58,123 @@
                                                         <i class="cursor-pointer fas fa-trash text-secondary"></i>
                                                     </button>
                                                 </form>
+                                                
+                                                <!-- Button to trigger the Periode Tanam Modal -->
+                                                <a href="javascript:void(0)" class="mx-3" data-bs-toggle="modal" data-bs-target="#periodeTanamModal{{ $greenhouse->id_greenhouse }}" data-bs-original-title="Manage Periode Tanam">
+                                                    <i class="fas fa-calendar text-secondary"></i>
+                                                </a>
+                                                
+                                                
+                                                <!-- View Periode Tanam Button (opens the modal) -->
+                                                <!-- Dropdown for View Periode Tanam -->
+                                                <div class="dropdown">
+                                                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        View Periode Tanam
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="min-width: 900px; padding: 15px 15px; font-size: 10px;">
+                                                        <div class="d-flex justify-content-between flex-wrap" style="font-size: 5px;">
+                                                            <p>ID</p>
+                                                            <p>Tanggal Tanam</p>
+                                                            <p>Tanggal Panen</p>
+                                                            <p>Keterangan</p>
+                                                            <p>Edit</p>
+                                                            <p>Delete</p>
+                                                        </div>
+                                                        @foreach($greenhouse->periodeTanam as $periode)
+                                                            <div class="d-flex justify-content-between flex-wrap" style="font-size: 5px;">
+                                                                <p>{{ $periode->id }}</p>
+                                                                <p>{{ $periode->tanggal_tanam }}</p>
+                                                                <p>{{ $periode->tanggal_panen ?? 'Not set' }}</p>
+                                                                <p>{{ $periode->keterangan ?? 'No description' }}</p>
+                                                                <a href="javascript:void(0)" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPeriodeTanamModal{{ $periode->id }}">
+                                                                    <i class="fas fa-edit"></i> Edit
+                                                                </a>
+                                                                <form action="{{ route('periode-tanam.destroy', $periode->id) }}" method="POST" style="display:inline-block;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn btn-danger btn-sm" style="border:none; background:red;">
+                                                                        <i class="fas fa-trash"></i> Delete
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                            <hr>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+
                                             </td>
                                         </tr>
+
+                                        <!-- Modal for Managing Periode Tanam -->
+                                        <div class="modal fade" id="periodeTanamModal{{ $greenhouse->id_greenhouse }}" tabindex="-1" aria-labelledby="periodeTanamModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="periodeTanamModalLabel">Periode Tanam - {{ $greenhouse->nama_greenhouse }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ route('periode-tanam.store', $greenhouse->id_greenhouse) }}" method="POST">
+                                                        @csrf
+                                                        
+                                                        <div class="mb-3">
+                                                            <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
+                                                            <input type="date" class="form-control" id="tanggal_tanam" name="tanggal_tanam" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="tanggal_panen" class="form-label">Tanggal Panen (optional)</label>
+                                                            <input type="date" class="form-control" id="tanggal_panen" name="tanggal_panen">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="keterangan" class="form-label">Keterangan (optional)</label>
+                                                            <textarea class="form-control" id="keterangan" name="keterangan"></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save Periode Tanam</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Modal for Editing Periode Tanam -->
+                                        <div class="modal fade" id="editPeriodeTanamModal{{ $periode->id }}" tabindex="-1" aria-labelledby="editPeriodeTanamModalLabel{{ $periode->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editPeriodeTanamModalLabel{{ $periode->id }}">Edit Periode Tanam</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ route('periode-tanam.update', $periode->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="modal-body">
+                                                            <!-- Input for Tanggal Tanam -->
+                                                            <div class="mb-3">
+                                                                <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
+                                                                <input type="date" class="form-control" id="tanggal_tanam" name="tanggal_tanam" value="{{ $periode->tanggal_tanam }}" required>
+                                                            </div>
+                                                            <!-- Input for Tanggal Panen (optional) -->
+                                                            <div class="mb-3">
+                                                                <label for="tanggal_panen" class="form-label">Tanggal Panen (optional)</label>
+                                                                <input type="date" class="form-control" id="tanggal_panen" name="tanggal_panen" value="{{ $periode->tanggal_panen }}">
+                                                            </div>
+                                                            <!-- Input for Keterangan (optional) -->
+                                                            <div class="mb-3">
+                                                                <label for="keterangan" class="form-label">Keterangan (optional)</label>
+                                                                <textarea class="form-control" id="keterangan" name="keterangan">{{ $periode->keterangan }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Update Periode Tanam</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     @endif
-                                
                                 @endforeach
                             </tbody>
                         </table>
@@ -70,7 +183,5 @@
             </div>
         </div>
     </div>
-
-    
 </div>
 @endsection

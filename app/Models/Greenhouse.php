@@ -32,6 +32,11 @@ class Greenhouse extends Model
     {
         return $this->hasOne(Sensor::class, 'id_greenhouse');
     }
+    public function periodeTanam()
+    {
+        return $this->hasMany(PeriodeTanam::class, 'id_greenhouse', 'id_greenhouse');
+    }
+
 
     
 }

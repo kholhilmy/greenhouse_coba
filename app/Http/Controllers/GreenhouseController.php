@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Greenhouse;
 use App\Models\JenisTanaman;
+use App\Models\PeriodeTanam;
 use Illuminate\Http\Request;
 
 class GreenhouseController extends Controller
@@ -11,11 +12,8 @@ class GreenhouseController extends Controller
     public function index()
     {
         // Fetch all greenhouses with related sensors and users
-        $greenhouses = Greenhouse::all();
-
+        $greenhouses = Greenhouse::with('periodeTanam')->get();
         
-        
-
         // Return a view with the fetched data
         return view('greenhouse-manage', compact('greenhouses'));
     }
@@ -27,7 +25,6 @@ class GreenhouseController extends Controller
 
     // Store a newly created greenhouse in the database
     public function store(Request $request) {
-        
         $attributes = $request->validate([
             'nama_greenhouse' => 'required|string|max:255',
             'id' => 'required|string|max:255',  // Validates that 'id' exists in 'users' table
@@ -42,7 +39,6 @@ class GreenhouseController extends Controller
             'waktu_tanam' => $attributes['waktu_tanam'],
             'id_jenis' => $attributes['nama_jenis'],
             'tong' => $attributes['tong'],
-            
         ]);
     
         return redirect()->route('greenhouse-manage')->with('success', 'Greenhouse created successfully.');
@@ -53,7 +49,6 @@ class GreenhouseController extends Controller
         // Fetch a specific greenhouse with related sensors and user
         $greenhouse = Greenhouse::findOrFail($id_greenhouse);
         
-
         // Return a view with the fetched data
         return view('greenhouse-manage.view', compact('greenhouse'));
     }
@@ -88,50 +83,87 @@ class GreenhouseController extends Controller
 
         return redirect()->route('greenhouse-manage')->with('success', 'Greenhouse deleted successfully.');
     }
-    // public function create() {
-    //     return view('greenhouse-manage.create_g');
-    // }
 
-    // public function store(Request $request) {
-    //     $attributes = $request->validate([
-    //         'nama_greenhouse' => 'required|string|max:255',
-    //         'jenis_tanaman' => 'required|string|max:255',
-    //         'id' => 'required|string|max:255',
-    //         'waktu_tanam' => 'required|date',
-    //     ]);
+    public function createPeriodeTanam($id_greenhouse)
+    {
+        // Temukan greenhouse berdasarkan id
+        $greenhouse = Greenhouse::findOrFail($id_greenhouse);
 
-    //     $greenhouse = Greenhouse::create($attributes);
+        // Kembalikan data ke view untuk digunakan dalam modal
+        return view('greenhouse-manage.create_periode_modal', compact('greenhouse'));
+    }
 
-    //     return redirect()->route('greenhouse-manage')->with('success', 'Greenhouse created successfully.');
-    // }
+    public function storePeriodeTanam(Request $request, $id_greenhouse)
+    {
+        // Validasi input
+        
+        $request->validate([
+            'tanggal_tanam' => 'required|date',
+            'tanggal_panen' => 'nullable|date',
+            'keterangan' => 'nullable|string',
+        ]);
 
-    // public function edit($id_greenhouse) {
-    //     $greenhouse = Greenhouse::findOrFail($id_greenhouse);
-    //     // $greenhouses = Greenhouse::all();
-    //     return view('greenhouse-manage.edit', compact('greenhouse'));
-    // }
+        // Temukan greenhouse berdasarkan id
+        
 
-    // public function update(Request $request, $id_greenhouse) {
-    //     $attributes = $request->validate([
-    //         'nama_greenhouse' => 'required|string|max:255',
-    //         'jenis_tanaman' => 'required|string|max:255',
-    //         'waktu_tanam' => 'required|date',
-    //     ]);
+        // Simpan periode tanam
+        PeriodeTanam::create([
+            'id_greenhouse' => $id_greenhouse,
+            'tanggal_tanam' => $request->tanggal_tanam,
+            'tanggal_panen' => $request->tanggal_panen,
+            'keterangan' => $request->keterangan,
+        ]);
+        
 
-    //     $greenhouse = Greenhouse::findOrFail($id_greenhouse);
-    //     $greenhouse->update($attributes);
+        // Redirect ke halaman utama setelah berhasil
+        return redirect()->route('greenhouse-manage')->with('success', 'Periode Tanam created successfully.');
+    }
 
-    //     return redirect()->route('greenhouse-manage')->with('success', 'Greenhouse updated successfully.');
-    // }
+    // Update or create the planting period (Periode Tanam) for a greenhouse
+    public function updatePeriodeTanam(Request $request, $id_greenhouse)
+    {
+        // Validate the input data
+        $request->validate([
+            'tanggal_tanam' => 'required|date',
+            'tanggal_panen' => 'nullable|date',
+            'keterangan' => 'nullable|string',
+        ]);
 
-    // // Remove the specified greenhouse from the database
-    // public function destroy($id_greenhouse) {
-    //     $greenhouse = Greenhouse::findOrFail($id_greenhouse);
-    //     $greenhouse->delete();
+        // Find the greenhouse
+        $greenhouse = Greenhouse::findOrFail($id_greenhouse);
 
-    //     return redirect()->route('greenhouse-manage')->with('success', 'Greenhouse deleted successfully.');
-    // }
+        // Create or update the PeriodeTanam for this greenhouse
+        $periodeTanam = PeriodeTanam::updateOrCreate(
+            ['id_greenhouse' => $id_greenhouse], // Match by greenhouse ID
+            [
+                'tanggal_tanam' => $request->tanggal_tanam,
+                'tanggal_panen' => $request->tanggal_panen,
+                'keterangan' => $request->keterangan,
+            ]
+        );
 
+        // Redirect back with a success message
+        return redirect()->route('greenhouse-manage')->with('success', 'Periode Tanam updated successfully.');
+    }
+
+    // Show the periode tanam of a specific greenhouse
+    public function showPeriodeTanam($id_greenhouse)
+    {
+        // Fetch greenhouse with related periode tanam
+        $greenhouse = Greenhouse::with('periodeTanam')->findOrFail($id_greenhouse);
+
+        return view('greenhouse-manage.view_periode', compact('greenhouse'));
+    }
+
+    // Delete the periode tanam
+    public function destroyPeriodeTanam($id)
+    {
+        // Find the periode tanam and delete it
+        $periodeTanam = PeriodeTanam::findOrFail($id);
+        $periodeTanam->delete();
+
+        return back()->with('success', 'Periode Tanam deleted successfully.');
+    }
 
     public function show($id)
     {
@@ -142,4 +174,3 @@ class GreenhouseController extends Controller
         return view('greenhouses-manage', compact('greenhouse'));
     }
 }
-

@@ -48,6 +48,18 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::delete('/greenhouses/{id_greenhouse}', [GreenhouseController::class, 'destroy'])->name('greenhouses.destroy');
 	Route::get('/greenhouses/{id_greenhouse}', [GreenhouseController::class, 'show1'])->name('greenhouses.view');
 
+	Route::put('greenhouses/{id_greenhouse}/periode-tanam', [GreenhouseController::class, 'updatePeriodeTanam'])->name('periode-tanam.update');
+	// Route::post('greenhouses/{id_greenhouse}/periode-tanam', [GreenhouseController::class, 'updatePeriodeTanam'])->name('periode-tanam.update');
+	
+	Route::get('greenhouses/{id_greenhouse}/create-periode', [GreenhouseController::class, 'createPeriodeTanam'])->name('periode-tanam.create');
+
+	// Menyimpan periode tanam
+	Route::post('greenhouses/{id_greenhouse}/store-periode', [GreenhouseController::class, 'storePeriodeTanam'])->name('periode-tanam.store');
+	Route::delete('periode-tanam/{id}', [GreenhouseController::class, 'destroyPeriodeTanam'])->name('periode-tanam.destroy');
+	
+	
+	Route::get('greenhouses/{id_greenhouse}/periode-tanam', [GreenhouseController::class, 'showPeriodeTanam'])->name('periode-tanam.show');
+
 
 	
 	Route::get('/jenis-tanaman', [JenisTanamanController::class, 'index'])->name('jenis-tanaman');
