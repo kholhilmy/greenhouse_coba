@@ -138,41 +138,43 @@
                                         </div>
                                         
                                         <!-- Modal for Editing Periode Tanam -->
-                                        <div class="modal fade" id="editPeriodeTanamModal{{ $periode->id }}" tabindex="-1" aria-labelledby="editPeriodeTanamModalLabel{{ $periode->id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="editPeriodeTanamModalLabel{{ $periode->id }}">Edit Periode Tanam</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        @isset($periode)
+                                            <div class="modal fade" id="editPeriodeTanamModal{{ $periode->id }}" tabindex="-1" aria-labelledby="editPeriodeTanamModalLabel{{ $periode->id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editPeriodeTanamModalLabel{{ $periode->id }}">Edit Periode Tanam</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+
+                                                        <form action="{{ route('periode-tanam.update', $periode->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
+                                                                    <input type="date" class="form-control" id="tanggal_tanam" name="tanggal_tanam" value="{{ old('tanggal_tanam', $periode->tanggal_tanam) }}" required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="tanggal_panen" class="form-label">Tanggal Panen (optional)</label>
+                                                                    <input type="date" class="form-control" id="tanggal_panen" name="tanggal_panen" value="{{ old('tanggal_panen', $periode->tanggal_panen) }}">
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="keterangan" class="form-label">Keterangan (optional)</label>
+                                                                    <textarea class="form-control" id="keterangan" name="keterangan">{{ old('keterangan', $periode->keterangan) }}</textarea>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary">Save Periode Tanam</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
                                                     </div>
-                                                    <form action="{{ route('periode-tanam.update', $periode->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="modal-body">
-                                                            <!-- Input for Tanggal Tanam -->
-                                                            <div class="mb-3">
-                                                                <label for="tanggal_tanam" class="form-label">Tanggal Tanam</label>
-                                                                <input type="date" class="form-control" id="tanggal_tanam" name="tanggal_tanam" value="{{ $periode->tanggal_tanam }}" required>
-                                                            </div>
-                                                            <!-- Input for Tanggal Panen (optional) -->
-                                                            <div class="mb-3">
-                                                                <label for="tanggal_panen" class="form-label">Tanggal Panen (optional)</label>
-                                                                <input type="date" class="form-control" id="tanggal_panen" name="tanggal_panen" value="{{ $periode->tanggal_panen }}">
-                                                            </div>
-                                                            <!-- Input for Keterangan (optional) -->
-                                                            <div class="mb-3">
-                                                                <label for="keterangan" class="form-label">Keterangan (optional)</label>
-                                                                <textarea class="form-control" id="keterangan" name="keterangan">{{ $periode->keterangan }}</textarea>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Update Periode Tanam</button>
-                                                        </div>
-                                                    </form>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @else
+                                            <p>Periode Tanam belum tersedia. Silakan buat periode tanam baru.</p>
+                                        @endif
 
                                     @endif
                                 @endforeach
