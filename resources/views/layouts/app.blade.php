@@ -35,6 +35,7 @@
   <title>
     Greenhouse IoT Project
   </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <!--     Fonts and icons     -->
   <link href="{{ asset('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700') }}" rel="stylesheet" />
   <!-- Nucleo Icons -->
