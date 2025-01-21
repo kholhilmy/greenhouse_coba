@@ -10,8 +10,8 @@
             <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
               <div class="card card-plain mt-8">
                 <div class="card-header pb-0 text-left bg-transparent">
-                  <h3 class="font-weight-bolder text-info text-gradient">Welcome on Login Page IOT Greenhouse Website</h3>
-                  <h4 class="font-weight-bolder text-info text-gradient">IOT Greenhouse Website</h4>
+                  <h3 class="font-weight-bolder text-info text-gradient">Welcome on Login Page IoT Greenhouse Website</h3>
+                  <h4 class="font-weight-bolder text-info text-gradient">IoT Greenhouse Website Base Aplication</h4>
                   <p class="mb-0">Create a new acount<br></p>
                   <p class="mb-0">Or Sign in with an existing account.</p>
                   
