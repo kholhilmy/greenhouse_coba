@@ -11,7 +11,7 @@ class MqttService
 
     public function __construct()
     {
-        $server = env('MQTT_SERVER', '127.0.0.1');
+        $server = env('MQTT_SERVER', '145.223.21.10');
         $port = env('MQTT_PORT', 1883);
 
         $this->mqtt = new phpMQTT($server, $port, uniqid());

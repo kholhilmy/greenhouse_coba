@@ -10,6 +10,7 @@ use App\Http\Controllers\GreenhouseController;
 use App\Http\Controllers\SensorController;
 use App\Http\Controllers\JenisTanamanController;
 use App\Http\Controllers\MqttController;
+use App\Http\Controllers\AlertController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
@@ -78,6 +79,8 @@ Route::group(['middleware' => 'auth'], function () {
 	
 	// Show a specific sensor by ID
 	Route::get('/sensors/{id}', [SensorController::class, 'show'])->name('sensors.show');
+
+	Route::get('/navbar', [AlertController::class, 'index'])->name('navbar');
 
 	Route::get('billing', function () {
 		return view('billing');
